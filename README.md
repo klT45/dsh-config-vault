@@ -20,6 +20,20 @@ DSH 的配置散落在很多地方：每个 profile 的 `cordis.patch.yml`（模
 
 零构建、零运行时依赖：纯 ESM JavaScript 包，`link:`/GitHub 源码安装后即可用。
 
+## 界面
+
+设置 → 配置保险箱（浅色/深色主题跟随宿主）：
+
+![配置保险箱面板](docs/screenshot-panel.png)
+
+新建快照：按作用域勾选；凭据默认排除，只有勾选「凭据（密钥）」后才会出现「包含凭据文件」的显式开关：
+
+![新建快照](docs/screenshot-create.png)
+
+与当前磁盘的差异：行级 diff、按文件分组、密钥值打码：
+
+![差异视图](docs/screenshot-diff.png)
+
 ## 安装
 
 前置：DSH `>= 0.2.1-rc.2`。
@@ -153,8 +167,9 @@ node src/cli.js status           # 不启动 DSH 也能看保险箱状态
 - 本仓库按社区精选列表 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
   的收录要求编写：`package.json` 声明 `dsh.bundle.patch`（可被 `dsh plugin add` 安装）、
   `dsh.client`（浏览器 UI）、`dsh.engines.dsh`（宿主版本要求）、仓库内有真实可运行代码。
-- 目录条目：`data/plugins/klT45__dsh-config-vault.yml`（分类 `dev`），PR 合并后出现在
-  [awesome-dsh-plugin.com](https://awesome-dsh-plugin.com) 与
+- 目录条目：`data/plugins/klT45__dsh-config-vault.yml`（分类 `dev`），已提交 PR
+  [awesome-dsh-plugin#8279](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/8279)；
+  合并后出现在 [awesome-dsh-plugin.com](https://awesome-dsh-plugin.com) 与
   [dsh-market](https://github.com/dsh-market/dsh-market) 插件市场的完整目录里。
 - 待办：npm 发布（`npm publish --registry=https://registry.npmjs.org`，需先 `npm login`）。
   一旦发布，官方 Discover 索引（`dsh-plugin-catalog`）会自动带上版本号，市场可以一键安装而不是源码安装。

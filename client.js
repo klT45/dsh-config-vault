@@ -49,8 +49,8 @@ window.__ModuleLoader__.load({
       bytes: '字节',
       createdAt: '时间',
       actions: '操作',
-      diff: '对比当前',
-      plan: '恢复预演',
+      diff: '对比',
+      plan: '预演',
       restore: '恢复',
       remove: '删除',
       export: '导出',
@@ -143,47 +143,56 @@ window.__ModuleLoader__.load({
       return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`
     }
 
-    /** Inline stylesheet; all colors come from host CSS variables with fallbacks. */
+    /**
+     * Inline stylesheet. Colors are derived from `currentColor` so the panel
+     * follows the host's light/dark theme without depending on design-token
+     * names that change between host versions; the brand blue is fixed on
+     * purpose (white text on it reads in both themes).
+     */
     const CSS = `
-      .cv-root{display:flex;flex-direction:column;gap:14px;font-size:13px;line-height:20px;color:var(--dsw-alias-label-primary, #1f2329)}
+      .cv-root{display:flex;flex-direction:column;gap:14px;font-size:13px;line-height:20px;color:inherit}
       .cv-head h3{margin:0;font-size:16px;font-weight:600}
-      .cv-head p{margin:4px 0 0;color:var(--dsw-alias-label-secondary, #6b7280);font-size:12px;line-height:18px}
-      .cv-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--dsw-alias-label-secondary, #6b7280)}
-      .cv-chip{border:1px solid var(--dsw-alias-border-l1, #e5e7eb);border-radius:999px;padding:1px 8px}
+      .cv-head p{margin:4px 0 0;color:color-mix(in srgb,currentColor 62%,transparent);font-size:12px;line-height:18px}
+      .cv-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:color-mix(in srgb,currentColor 62%,transparent)}
+      .cv-chip{border:1px solid color-mix(in srgb,currentColor 22%,transparent);border-radius:999px;padding:1px 8px}
       .cv-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
       .cv-row.right{justify-content:flex-end}
-      .cv-btn{background:var(--dsw-alias-bg-layer-2, #f3f4f6);color:inherit;border:1px solid var(--dsw-alias-border-l1, #e5e7eb);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;transition:border-color .12s ease}
-      .cv-btn:hover{border-color:var(--dsw-alias-brand-primary, #4d6bfe)}
-      .cv-btn.primary{background:var(--dsw-alias-brand-primary, #4d6bfe);border-color:var(--dsw-alias-brand-primary, #4d6bfe);color:#fff}
-      .cv-btn.danger:hover{border-color:#e5484d;color:#e5484d}
+      .cv-btn{background:color-mix(in srgb,currentColor 8%,transparent);color:inherit;border:1px solid color-mix(in srgb,currentColor 22%,transparent);border-radius:8px;padding:4px 10px;font-size:12px;cursor:pointer;transition:border-color .12s ease,background .12s ease}
+      .cv-btn:hover{border-color:color-mix(in srgb,currentColor 42%,transparent)}
+      .cv-btn.primary{background:#4d6bfe;border-color:#4d6bfe;color:#fff}
+      .cv-btn.primary:hover{background:#3d59e0}
+      .cv-btn.danger:hover{border-color:#f85149;color:#f85149}
       .cv-btn:disabled{opacity:.5;cursor:default}
       .cv-field{display:flex;flex-direction:column;gap:4px}
-      .cv-field label{font-size:12px;color:var(--dsw-alias-label-secondary, #6b7280)}
-      .cv-input{background:var(--dsw-alias-bg-layer-1, #fff);color:inherit;border:1px solid var(--dsw-alias-border-l1, #e5e7eb);border-radius:8px;padding:6px 10px;font-size:13px;outline:none}
-      .cv-input:focus{border-color:var(--dsw-alias-brand-primary, #4d6bfe)}
+      .cv-field label{font-size:12px;color:color-mix(in srgb,currentColor 62%,transparent)}
+      .cv-input{background:color-mix(in srgb,currentColor 6%,transparent);color:inherit;border:1px solid color-mix(in srgb,currentColor 22%,transparent);border-radius:8px;padding:6px 10px;font-size:13px;outline:none}
+      .cv-input:focus{border-color:#4d6bfe}
       .cv-scopes{display:flex;flex-wrap:wrap;gap:6px 14px}
       .cv-scopes label{display:flex;align-items:center;gap:6px;font-size:12px;color:inherit}
-      .cv-card{border:1px solid var(--dsw-alias-border-l1, #e5e7eb);border-radius:10px;padding:10px 12px;background:var(--dsw-alias-bg-layer-1, #fff)}
+      .cv-card{border:1px solid color-mix(in srgb,currentColor 18%,transparent);border-radius:10px;padding:10px 12px}
       .cv-card h4{margin:0 0 4px;font-size:13px;font-weight:600}
-      .cv-card .hint{color:var(--dsw-alias-label-secondary, #6b7280);font-size:12px}
-      .cv-list{display:flex;flex-direction:column;border:1px solid var(--dsw-alias-border-l1, #e5e7eb);border-radius:10px;overflow:hidden}
-      .cv-item{display:flex;gap:10px;align-items:center;padding:9px 12px;border-top:1px solid var(--dsw-alias-border-l1, #e5e7eb)}
+      .cv-card .hint{color:color-mix(in srgb,currentColor 62%,transparent);font-size:12px}
+      .cv-list{display:flex;flex-direction:column;border:1px solid color-mix(in srgb,currentColor 18%,transparent);border-radius:10px;overflow:hidden}
+      .cv-item{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-top:1px solid color-mix(in srgb,currentColor 14%,transparent)}
       .cv-item:first-child{border-top:none}
-      .cv-item.selected{background:color-mix(in srgb,var(--dsw-alias-brand-primary, #4d6bfe) 8%,transparent)}
-      .cv-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+      .cv-item.selected{background:color-mix(in srgb,#4d6bfe 10%,transparent)}
+      .cv-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+      .cv-side{display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex:none;max-width:100%}
+      .cv-badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+      .cv-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
       .cv-name{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .cv-sub{font-size:11px;color:var(--dsw-alias-label-secondary, #6b7280)}
-      .cv-badge{font-size:11px;border-radius:999px;padding:0 7px;border:1px solid var(--dsw-alias-border-l1, #e5e7eb);color:var(--dsw-alias-label-secondary, #6b7280)}
-      .cv-badge.warn{border-color:#f0b429;color:#b7791f}
-      .cv-diff{margin:0;padding:10px 12px;border-radius:10px;background:var(--dsw-alias-bg-layer-2, #f7f8fa);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:18px;max-height:360px;overflow:auto;white-space:pre-wrap;word-break:break-all}
-      .cv-hunk{border-top:1px dashed var(--dsw-alias-border-l1, #e5e7eb);padding-top:6px;margin-top:6px}
+      .cv-sub{font-size:11px;color:color-mix(in srgb,currentColor 62%,transparent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .cv-badge{font-size:11px;border-radius:999px;padding:0 7px;border:1px solid color-mix(in srgb,currentColor 22%,transparent);color:color-mix(in srgb,currentColor 70%,transparent);white-space:nowrap}
+      .cv-badge.warn{border-color:#f0b429;color:#e0a526}
+      .cv-diff{margin:0;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,currentColor 6%,transparent);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:18px;max-height:360px;overflow:auto;white-space:pre-wrap;word-break:break-all}
+      .cv-hunk{border-top:1px dashed color-mix(in srgb,currentColor 18%,transparent);padding-top:6px;margin-top:6px}
       .cv-hunk:first-child{border-top:none;margin-top:0;padding-top:0}
-      .cv-line.add{color:#1a7f37}
-      .cv-line.remove{color:#cf222e}
-      .cv-line.context{color:var(--dsw-alias-label-secondary, #6b7280)}
-      .cv-note{font-size:12px;color:var(--dsw-alias-label-secondary, #6b7280)}
-      .cv-error{color:#cf222e;font-size:12px;white-space:pre-wrap}
-      .cv-ok{color:#1a7f37;font-size:12px}
+      .cv-line.add{color:#2ea043}
+      .cv-line.remove{color:#f85149}
+      .cv-line.context{color:color-mix(in srgb,currentColor 62%,transparent)}
+      .cv-note{font-size:12px;color:color-mix(in srgb,currentColor 62%,transparent)}
+      .cv-error{color:#f85149;font-size:12px;white-space:pre-wrap}
+      .cv-ok{color:#2ea043;font-size:12px}
       .cv-scroll{max-height:320px;overflow:auto}
     `
 
@@ -454,9 +463,11 @@ window.__ModuleLoader__.load({
                   },
                 }),
                 COPY.scopeLabels[scope.id] || scope.label)))),
-          h('label', { className: 'cv-row', style: { fontSize: 12 } },
-            h('input', { type: 'checkbox', checked: includeSecrets, onChange: event => setIncludeSecrets(event.target.checked) }),
-            COPY.includeSecrets),
+          ((scopes === undefined ? scopeDefs.filter(item => item.defaultOn).map(item => item.id) : scopes).includes('credentials')
+            ? h('label', { className: 'cv-row', style: { fontSize: 12 } },
+              h('input', { type: 'checkbox', checked: includeSecrets, onChange: event => setIncludeSecrets(event.target.checked) }),
+              COPY.includeSecrets)
+            : null),
           h('div', { className: 'cv-note' }, COPY.createHint),
           h('div', { className: 'cv-row right' },
             h('button', { className: 'cv-btn', onClick: () => setShowCreate(false) }, COPY.cancel),
@@ -477,15 +488,17 @@ window.__ModuleLoader__.load({
               },
               h('div', { className: 'cv-main' },
                 h('div', { className: 'cv-name' }, snapshot.name),
-                h('div', { className: 'cv-sub' }, `${formatTime(snapshot.createdAt)} · ${snapshot.files} 个文件 · ${formatBytes(snapshot.bytes)} · ${snapshot.scopes.join(', ')}`)),
-              h('span', { className: `cv-badge${snapshot.kind === 'auto' ? '' : ''}` }, snapshot.kind === 'auto' ? COPY.kindAuto : COPY.kindManual),
-              snapshot.secrets > 0 ? h('span', { className: 'cv-badge warn' }, COPY.secretsBadge) : null,
-              h('div', { className: 'cv-row' },
-                h('button', { className: 'cv-btn', onClick: event => { event.stopPropagation(); showDiff(snapshot.id) }, disabled: busy }, COPY.diff),
-                h('button', { className: 'cv-btn', onClick: event => { event.stopPropagation(); showPlan(snapshot.id) }, disabled: busy }, COPY.plan),
-                h('button', { className: 'cv-btn primary', onClick: event => { event.stopPropagation(); restore(snapshot.id) }, disabled: busy }, COPY.restore),
-                h('button', { className: 'cv-btn', onClick: event => { event.stopPropagation(); exportSnapshot(snapshot.id) }, disabled: busy }, COPY.export),
-                h('button', { className: 'cv-btn danger', onClick: event => { event.stopPropagation(); remove(snapshot.id) }, disabled: busy }, COPY.remove))))) ),
+                h('div', { className: 'cv-sub', title: snapshot.scopes.join(', ') }, `${formatTime(snapshot.createdAt)} · ${snapshot.files} 个文件 · ${formatBytes(snapshot.bytes)} · ${snapshot.scopes.join(', ')}`)),
+              h('div', { className: 'cv-side' },
+                h('div', { className: 'cv-badges' },
+                  h('span', { className: 'cv-badge' }, snapshot.kind === 'auto' ? COPY.kindAuto : COPY.kindManual),
+                  snapshot.secrets > 0 ? h('span', { className: 'cv-badge warn' }, COPY.secretsBadge) : null),
+                h('div', { className: 'cv-actions' },
+                  h('button', { className: 'cv-btn', title: COPY.diffTitle, onClick: event => { event.stopPropagation(); showDiff(snapshot.id) }, disabled: busy }, COPY.diff),
+                  h('button', { className: 'cv-btn', title: COPY.planTitle, onClick: event => { event.stopPropagation(); showPlan(snapshot.id) }, disabled: busy }, COPY.plan),
+                  h('button', { className: 'cv-btn primary', title: COPY.restoreConfirm, onClick: event => { event.stopPropagation(); restore(snapshot.id) }, disabled: busy }, COPY.restore),
+                  h('button', { className: 'cv-btn', onClick: event => { event.stopPropagation(); exportSnapshot(snapshot.id) }, disabled: busy }, COPY.export),
+                  h('button', { className: 'cv-btn danger', onClick: event => { event.stopPropagation(); remove(snapshot.id) }, disabled: busy }, COPY.remove)))))) ),
 
         selectedSnapshot === undefined ? null : h('div', { className: 'cv-note' }, `${selectedSnapshot.name} · ${selectedSnapshot.id}`),
         diff === undefined ? null : h(DiffView, { diff }),

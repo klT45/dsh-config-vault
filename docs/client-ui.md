@@ -1,7 +1,9 @@
 # Client UI contract — the 配置保险箱 settings section
 
-Status: verified as far as possible without a browser (bundle composed into the boot graph, served with
-200, factory contract unit-tested). Visual rendering must be confirmed once in a live GUI.
+Status: verified in a real DSH 0.2.1-rc.2 GUI (driven over the Chrome DevTools Protocol against an
+isolated host): the section renders, the snapshot list loads, the diff and create views render, and the
+colors follow the host's dark theme. Screenshots: [`screenshot-panel.png`](screenshot-panel.png),
+[`screenshot-diff.png`](screenshot-diff.png), [`screenshot-create.png`](screenshot-create.png).
 
 ## Where it mounts
 
@@ -89,5 +91,5 @@ description, `window.confirm` for destructive confirmations. Diff lines are colo
   `window.__ModuleLoader__` and fake React, asserting: module id equals the loader entry name, factory
   returns `{ apply, inject }`, `apply` registers exactly one `settings.section`, and a missing `slots`
   service degrades with a warning instead of throwing.
-- After install, open 设置 → 配置保险箱 once and confirm: list loads, 新建快照 works, 对比当前 shows a
+- After install, open 设置 → 配置保险箱 once and confirm: list loads, 新建快照 works, 对比 shows a
   hunk, 恢复预演 shows counts, 恢复 asks for confirmation.
