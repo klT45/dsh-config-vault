@@ -1,5 +1,9 @@
 # 配置保险箱（dsh-config-vault）
 
+[![test](https://github.com/klT45/dsh-config-vault/actions/workflows/test.yml/badge.svg)](https://github.com/klT45/dsh-config-vault/actions/workflows/test.yml)
+[![GitHub release](https://img.shields.io/github/v/release/klT45/dsh-config-vault)](https://github.com/klT45/dsh-config-vault/releases)
+[![license](https://img.shields.io/github/license/klT45/dsh-config-vault)](LICENSE)
+
 [English](#english) · 中文
 
 给 DeepSeek Harness（DSH）的配置留一份**可对比、可回滚、可带走**的底。
