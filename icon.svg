@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="DSH 配置保险箱">
+  <defs>
+    <linearGradient id="body" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4d6bfe"/>
+      <stop offset="1" stop-color="#2f47c9"/>
+    </linearGradient>
+  </defs>
+  <rect x="7" y="8" width="50" height="48" rx="10" fill="url(#body)"/>
+  <rect x="12" y="13" width="40" height="38" rx="6" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2"/>
+  <circle cx="32" cy="31" r="11" fill="none" stroke="#ffffff" stroke-width="3.2"/>
+  <circle cx="32" cy="31" r="3.4" fill="#ffffff"/>
+  <path d="M32 34.5v6" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  <path d="M18 24h4M18 32h4M18 40h4" stroke="#ffffff" stroke-opacity="0.8" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="46.5" cy="18.5" r="3.5" fill="#7ef0bd"/>
+</svg>

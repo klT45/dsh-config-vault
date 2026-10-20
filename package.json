@@ -1,0 +1,74 @@
+{
+  "name": "dsh-config-vault",
+  "version": "0.1.0",
+  "description": "配置保险箱：为 DeepSeek Harness 配置创建快照、对比差异并安全回滚（设置补丁、插件清单、技能规则、工作区列表），恢复前自动安全快照，凭据默认排除。零构建、零运行时依赖。",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./client": "./client.js",
+    "./core": "./src/core/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "docs",
+    "scripts/e2e-http.mjs",
+    "client.js",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "dsh-config-vault": "./src/cli.js"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "test": "node --test",
+    "e2e": "node scripts/e2e-http.mjs",
+    "status": "node src/cli.js status",
+    "snapshot": "node src/cli.js snapshot",
+    "list": "node src/cli.js list"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek",
+    "deepseek-harness",
+    "config",
+    "configuration",
+    "snapshot",
+    "backup",
+    "restore",
+    "rollback"
+  ],
+  "license": "MIT",
+  "author": "klT45",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klT45/dsh-config-vault.git"
+  },
+  "homepage": "https://github.com/klT45/dsh-config-vault#readme",
+  "bugs": {
+    "url": "https://github.com/klT45/dsh-config-vault/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "icon": "icon.svg",
+  "dsh": {
+    "engines": {
+      "dsh": ">=0.2.1-rc.2"
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  }
+}

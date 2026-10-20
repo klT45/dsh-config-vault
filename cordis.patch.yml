@@ -1,0 +1,13 @@
+# dsh-config-vault bundle patch.
+#
+# One YAML list of loader patch entries: `insert` appends the vault row to the
+# profile roster when the package is listed in `dsh.profile.bundles`. The row
+# is what the Cordis Loader instantiates; remove `config` to take the defaults.
+- insert:
+    - id: config-vault
+      name: dsh-config-vault
+      config:
+        routePrefix: /config-vault
+        includeCredentials: false
+        keepManual: 30
+        keepAuto: 10
