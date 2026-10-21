@@ -39,6 +39,9 @@ DSH 的配置散落在很多地方：每个 profile 的 `cordis.patch.yml`（模
 前置：DSH `>= 0.2.1-rc.2`。
 
 ```powershell
+# 从 npm 安装（已发布，推荐）
+dsh plugin --profile desktop add dsh-config-vault
+
 # 从 GitHub 源码安装（无需 npm 包、无需构建）
 dsh plugin --profile desktop add github:klT45/dsh-config-vault
 
@@ -171,8 +174,11 @@ node src/cli.js status           # 不启动 DSH 也能看保险箱状态
   [awesome-dsh-plugin#8279](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/8279)；
   合并后出现在 [awesome-dsh-plugin.com](https://awesome-dsh-plugin.com) 与
   [dsh-market](https://github.com/dsh-market/dsh-market) 插件市场的完整目录里。
-- 待办：npm 发布（`npm publish --registry=https://registry.npmjs.org`，需先 `npm login`）。
-  一旦发布，官方 Discover 索引（`dsh-plugin-catalog`）会自动带上版本号，市场可以一键安装而不是源码安装。
+- 已发布 npm：<https://www.npmjs.com/package/dsh-config-vault>（`0.1.2`），
+  `dsh.bundle` / `dsh.client` / `dsh.engines.dsh` 都在包内，可 `dsh plugin add dsh-config-vault` 一键安装；
+  官方 Discover 索引（`dsh-plugin-catalog`）同步后市场即可带版本号安装。
+- 已发布 GitHub Release：<https://github.com/klT45/dsh-config-vault/releases>(`v0.1.2`，带预构建
+  `dsh-config-vault.tgz`，`releases/latest/download/dsh-config-vault.tgz` 固定可用)。
 
 ## English
 
