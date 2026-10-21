@@ -52,7 +52,12 @@ export async function planRestore(context, id, options = {}) {
   const warnings = []
   const snapshotPaths = new Set()
 
+  // Only warn about a scope when the snapshot actually carries files for it;
+  // a selected-but-empty scope would otherwise produce a misleading warning
+  // (e.g. the workspace note on a snapshot that has no workspace file).
+  const scopesWithFiles = new Set(manifest.files.map(file => file.scope))
   for (const scopeId of scopes) {
+    if (!scopesWithFiles.has(scopeId)) continue
     const scope = resolveScopes([scopeId]).scopes[0]
     if (scope?.restoreWarning !== undefined) warnings.push(scope.restoreWarning)
   }

@@ -116,7 +116,7 @@ MCP 服务器与智能体预设在当前 DSH 版本里就是 `cordis.patch.yml` 
 
 ## 已验证到什么程度
 
-- 29 个自动化测试（`node --test`）覆盖作用域、逻辑路径安全、快照、diff（含新增/缺失文件内容）、恢复、导入导出、口令门禁、路由围栏、工具契约、客户端 bundle 契约与面板/差异/预演渲染；
+- 36 个自动化测试（`node --test`）覆盖作用域、逻辑路径安全、快照、diff（含新增/缺失文件内容）、恢复、导入导出、口令门禁、路由围栏、工具契约、客户端 bundle 契约与面板/差异/预演渲染；
 - 在**隔离的 DSH_HOME** 里真实启动 web profile，用 `scripts/e2e-http.mjs` 跑通：状态 → 中文名快照 → 篡改配置 → diff → 预演 → 恢复（安全快照）→ 导出/导入 → 含凭据导出强制口令 → 删除，全部通过；
 - 真实的 host 启动日志确认 `Config` 校验、`webServer` 路由注册与 `/plugins/dsh-config-vault/client.js` 被组合进浏览器 boot graph。
 
@@ -128,6 +128,12 @@ MCP 服务器与智能体预设在当前 DSH 版本里就是 `cordis.patch.yml` 
 - **UI 路由前缀**：默认 `/config-vault`；改 `routePrefix` 需要同步改 `client.js` 里的常量（当前未做运行时发现）；
 - **manifest schema** 目前只有 v1，未做旧版本迁移；
 - 目前只在 Windows 上实机验证（逻辑路径与路径安全是平台无关的，POSIX 未实机跑过）。
+
+## 变更记录
+
+- `0.1.3`：修复 `prune --keep-manual/--keep-auto` 传入非数字（如 `abc`）时被当成 0、把快照全部清空的问题——核心层和 CLI 现在都会拒绝非法保留数量；预演/恢复不再对“快照里没有文件的作用域”给出误导性警告；空快照会明确 warning；新增 CLI 集成测试。
+- `0.1.2`：npm 正式发布，补齐关键词、仓库信息与安装文档。
+- `0.1.1`：首个可安装版本（GitHub 打包分发）。
 
 ## 目录结构
 
@@ -174,10 +180,10 @@ node src/cli.js status           # 不启动 DSH 也能看保险箱状态
   [awesome-dsh-plugin#8279](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/8279)；
   合并后出现在 [awesome-dsh-plugin.com](https://awesome-dsh-plugin.com) 与
   [dsh-market](https://github.com/dsh-market/dsh-market) 插件市场的完整目录里。
-- 已发布 npm：<https://www.npmjs.com/package/dsh-config-vault>（`0.1.2`），
+- 已发布 npm：<https://www.npmjs.com/package/dsh-config-vault>（`0.1.3`），
   `dsh.bundle` / `dsh.client` / `dsh.engines.dsh` 都在包内，可 `dsh plugin add dsh-config-vault` 一键安装；
   官方 Discover 索引（`dsh-plugin-catalog`）同步后市场即可带版本号安装。
-- 已发布 GitHub Release：<https://github.com/klT45/dsh-config-vault/releases>(`v0.1.2`，带预构建
+- 已发布 GitHub Release：<https://github.com/klT45/dsh-config-vault/releases>(`v0.1.3`，带预构建
   `dsh-config-vault.tgz`，`releases/latest/download/dsh-config-vault.tgz` 固定可用)。
 
 ## English

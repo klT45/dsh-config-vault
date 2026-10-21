@@ -166,6 +166,21 @@ describe('snapshot', () => {
     assert.equal(result.deleted.length, 1)
     assert.ok((await listSnapshots(ctx(), { kind: 'auto' })).snapshots.some(snapshot => snapshot.id === autos[2].id))
   })
+
+  it('rejects invalid retention counts instead of deleting everything', async () => {
+    await createSnapshot(ctx(), { name: 'keep-me' })
+    await assert.rejects(() => pruneSnapshots(ctx(), { keepManual: Number.NaN }), /非负整数/)
+    await assert.rejects(() => pruneSnapshots(ctx(), { keepAuto: -1 }), /非负整数/)
+    await assert.rejects(() => pruneSnapshots(ctx(), { keepManual: 1.5 }), /非负整数/)
+    assert.equal((await listSnapshots(ctx())).snapshots.length, 1, 'rejected prune must not delete anything')
+  })
+
+  it('warns when a snapshot ends up with no files', async () => {
+    await rm(join(home, 'storages', 'workspace.json'))
+    const manifest = await createSnapshot(ctx(), { name: '空快照', scopes: ['workspaces'] })
+    assert.equal(manifest.files.length, 0)
+    assert.ok(manifest.warnings.some(warning => warning.includes('没有找到可备份的配置文件')), JSON.stringify(manifest.warnings))
+  })
 })
 
 describe('diff', () => {
@@ -243,6 +258,16 @@ describe('restore', () => {
     assert.equal(result.restored.length, 1)
     assert.equal(result.restored[0].path, 'home/storages/workspace.json')
     assert.equal(await readFile(join(home, 'profiles', 'desktop', 'package.json'), 'utf8'), '{"name":"broken"}', 'other scope untouched')
+  })
+
+  it('does not warn about a selected scope the snapshot has no files for', async () => {
+    await rm(join(home, 'storages', 'workspace.json'))
+    const manifest = await createSnapshot(ctx(), { name: 'no-workspaces' })
+    assert.ok(manifest.scopes.includes('workspaces'), 'scope stays selected by default')
+    const plan = await planRestore(ctx(), manifest.id)
+    assert.ok(!plan.warnings.some(warning => warning.includes('工作区')), JSON.stringify(plan.warnings))
+    const result = await applyRestore(ctx(), manifest.id)
+    assert.ok(!result.warnings.some(warning => warning.includes('工作区')), JSON.stringify(result.warnings))
   })
 })
 

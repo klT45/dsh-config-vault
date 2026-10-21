@@ -286,10 +286,17 @@ async function main() {
       return 0
     }
     case 'prune': {
-      const result = await vault.prune({
-        keepManual: flags['keep-manual'] === undefined ? undefined : Number(flags['keep-manual']),
-        keepAuto: flags['keep-auto'] === undefined ? undefined : Number(flags['keep-auto']),
-      })
+      // Reject junk before it reaches prune: Number('abc') is NaN, and a NaN
+      // retention count would otherwise be treated as "keep 0" and delete
+      // every snapshot.
+      const count = (key) => {
+        const raw = flags[key]
+        if (raw === undefined) return undefined
+        const value = typeof raw === 'string' ? Number(raw) : Number.NaN
+        if (!Number.isInteger(value) || value < 0) throw new Error(`--${key} 必须是非负整数`)
+        return value
+      }
+      const result = await vault.prune({ keepManual: count('keep-manual'), keepAuto: count('keep-auto') })
       console.log(json ? JSON.stringify(result) : `已清理 ${result.deleted.length} 个旧快照`)
       return 0
     }

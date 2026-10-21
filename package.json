@@ -1,6 +1,6 @@
 {
   "name": "dsh-config-vault",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "配置保险箱：为 DeepSeek Harness 配置创建快照、对比差异并安全回滚（设置补丁、插件清单、技能规则、工作区列表），恢复前自动安全快照，凭据默认排除。零构建、零运行时依赖。",
   "type": "module",
   "main": "src/index.js",

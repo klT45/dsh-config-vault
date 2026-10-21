@@ -200,6 +200,7 @@ export async function createSnapshot(context, options = {}) {
     }
 
     if (unknown.length > 0) warnings.push(`未知作用域已忽略：${unknown.join(', ')}`)
+    if (files.length === 0) warnings.push('没有找到可备份的配置文件：请检查作用域选择是否正确，或 DSH_HOME 是否指向真实的配置目录')
 
     /** @type {SnapshotManifest} */
     const manifest = {
@@ -365,12 +366,19 @@ export async function deleteSnapshot(context, id) {
  */
 export async function pruneSnapshots(context, options = {}) {
   const { keepManual = DEFAULT_KEEP_MANUAL, keepAuto = DEFAULT_KEEP_AUTO, protectId } = options
+  // Guard the retention counts: a NaN from an unparsed CLI flag would make
+  // `slice(Math.max(0, NaN))` equal `slice(0)` and silently delete everything.
+  const keepByKind = { manual: keepManual, auto: keepAuto }
+  for (const [kind, keep] of Object.entries(keepByKind)) {
+    if (typeof keep !== 'number' || !Number.isInteger(keep) || keep < 0) {
+      throw new VaultError('invalid-argument', `保留数量（${kind === 'manual' ? 'keepManual' : 'keepAuto'}）必须是非负整数`)
+    }
+  }
   const { snapshots } = await listSnapshots(context)
   const deleted = []
   for (const kind of /** @type {const} */ (['manual', 'auto'])) {
     const group = snapshots.filter(snapshot => snapshot.kind === kind)
-    const keep = kind === 'manual' ? keepManual : keepAuto
-    for (const snapshot of group.slice(Math.max(0, keep))) {
+    for (const snapshot of group.slice(keepByKind[kind])) {
       if (snapshot.id === protectId) continue
       await deleteSnapshot(context, snapshot.id)
       deleted.push(snapshot.id)
